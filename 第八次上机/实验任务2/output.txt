@@ -1,0 +1,571 @@
+line:1   <?php
+line:2   session_start();
+line:3   header("content-type:text/html;charset=utf-8");
+line:4   $page=isset($_GET['page']) ?$_GET['page'] :1 ;
+line:5   $page=!empty($page) ? $page :1;
+line:6   $conn=mysqli_connect("*************","root","**************","liuyanban");
+line:7   mysqli_set_charset($conn,'utf8');
+line:8   $table_name="kaihua";
+line:9   $perpage=7;
+line:10   $total_sql="select count(*) from $table_name";
+line:11   $total_result =mysqli_query($conn,$total_sql);
+line:12   $total_row=mysqli_fetch_row($total_result);
+line:13   $total = $total_row[0];
+line:14   $total_page = ceil($total/$perpage);
+line:15   $page=$page>$total_page ? $total_page:$page;
+line:16   $start=($page-1)*$perpage;
+line:17   $sql= "select * from kaihua order by id desc limit $start ,$perpage";
+line:18   $result=mysqli_query($conn,$sql);
+line:19   ?>
+line:20   <!DOCTYPE html>
+line:21   <style>
+line:22       .header{
+line:23           background:linear-gradient(-142deg, #B0C4DE 10%, #F0FFFF 100%);
+line:24           text-align:center;
+line:25           padding:5px;
+line:26       }
+line:27   
+line:28       .header1{
+line:29           background:#F0FFFF;
+line:30           text-align:center;
+line:31           padding:5px;
+line:32           margin:0;
+line:33           width:490px;
+line:34       }
+line:35   
+line:36       .y{
+line:37           text-align:right;
+line:38           position:relative;
+line:39           top:80px;
+line:40           right:50px;
+line:41       }
+line:42   
+line:43       .l{
+line:44           text-align:center;
+line:45       }
+line:46   
+line:47       .ss{
+line:48           background:#D2E9FF;
+line:49           width:50px;
+line:50       }
+line:51   
+line:52       .tj{
+line:53           width: 270px;
+line:54           height: 40px;
+line:55           border-width: 0px;
+line:56           border-radius: 3px;
+line:57           background: #1E90FF;
+line:58           cursor: pointer;
+line:59           outline: none;
+line:60           font-family: Microsoft YaHei;
+line:61           color: white;
+line:62           font-size: 17px;
+line:63           position:relative;
+line:64           left:100px;
+line:65           top:15px;
+line:66       }
+line:67   
+line:68       .tj1{
+line:69           width: 150px;
+line:70           height: 40px;
+line:71           border-width: 1px;
+line:72           border-radius: 3px;
+line:73           background: #F5F5F5;
+line:74           cursor: pointer;
+line:75           outline: none;
+line:76           font-family: Microsoft YaHei;
+line:77           color: white;
+line:78           font-size: 17px;
+line:79           position:relative;
+line:80           left:15px;
+line:81           top:0;
+line:82           border-radius:20px;
+line:83       }
+line:84   
+line:85       .main{
+line:86           width:1200px;
+line:87           height:900px;
+line:88           position:relative;
+line:89           left:300px;
+line:90       }
+line:91   
+line:92       .r{
+line:93           width:500px;
+line:94           height:730px;
+line:95           float:right;
+line:96           border-style: solid;
+line:97           border-color:grey;
+line:98           position:relative;
+line:99           top:20px;
+line:100           background:linear-gradient(-142deg, #E0FFFF 10%, #F5F5F5 100%);
+line:101       }
+line:102   
+line:103       .image-one{
+line:104           position:absolute;
+line:105           left:60px;
+line:106           top:15px;
+line:107       }
+line:108   
+line:109       .image-two{
+line:110           position:absolute;
+line:111           left:220px;
+line:112           top:90px;
+line:113       }
+line:114   
+line:115       .k1{
+line:116           height:30px;
+line:117           background:#eeeeee;
+line:118           width:470px;
+line:119           margin:5px;
+line:120           position:relative;
+line:121           left:10px;
+line:122       }
+line:123   
+line:124       .k2{
+line:125           height:320px;
+line:126           background:#eeeeee;
+line:127           width:350px;
+line:128           margin:5px;
+line:129           position:relative;
+line:130           left:0;
+line:131           iframe scrolling:yes;
+line:132           overflow: scroll;
+line:133       }
+line:134   
+line:135       .z{
+line:136           width:580px;
+line:137           height:720px;
+line:138           background:#F0F8FF;
+line:139           position:absolute;
+line:140           top:-10px;;
+line:141           right:580px;
+line:142           margin:10px;
+line:143           padding:5px;
+line:144           border:1px solid #CCEFF5;
+line:145           border-radius:20px;
+line:146       }
+line:147   
+line:148       hr.style{
+line:149           width:550px;
+line:150           margin:0 auto;
+line:151           border: 0;
+line:152           height: 1px;
+line:153           background: #333;
+line:154           background-image: linear-gradient(to right, #ccc, #333, #ccc);
+line:155       }
+line:156   
+line:157       .time{
+line:158           float:right;
+line:159           text-align:right;
+line:160       }
+line:161   
+line:162       .pagination-bar {
+line:163           font-size: 0px;
+line:164           padding: 20px 0px;
+line:165           text-align: center;
+line:166       }
+line:167   
+line:168       .pagination-bar a {
+line:169           display: inline-block;
+line:170           padding: 5px 7.5px;
+line:171           text-decoration: none;
+line:172           min-width: 20px;
+line:173           font-size: 16px;
+line:174       }
+line:175   
+line:176       .pagination-bar a:not(.disabled) {
+line:177           background-color: #FFF;
+line:178           color: #666;
+line:179           border: 1px solid #BBBBBB;
+line:180       }
+line:181   
+line:182       .pagination-bar a.disabled {
+line:183           background-color: #666;
+line:184           color: #FFF;
+line:185           border: 1px solid #444;
+line:186       }
+line:187   
+line:188       .page-prev {
+line:189           border-radius: 15px 0px 0px 15px;
+line:190       }
+line:191   
+line:192       .page-next {
+line:193           border-radius: 0px 15px 15px 0px
+line:194       }
+line:195   
+line:196       .pagination-bar span:not(.active) {
+line:197           display: inline-block;
+line:198           padding: 5px 7.5px;
+line:199           font-size: 16px;
+line:200       }
+line:201   
+line:202       label{
+line:203           width: 50px;
+line:204           display: inline-block;
+line:205           text-align: center;
+line:206       }
+line:207   
+line:208       input#rightcode{
+line:209           font-family: Arial;
+line:210           font-style: italic;
+line:211           color: red;
+line:212           padding: 2px 3px;
+line:213           letter-spacing: 2px;
+line:214           font-weight: bolder;
+line:215       }
+line:216   
+line:217       .dl{
+line:218           position:relative;
+line:219           left:110px;
+line:220           top:-10px;
+line:221       }
+line:222   
+line:223       .footer{
+line:224           background:linear-gradient(-142deg, #B0C4DE 10%, #F0FFFF 100%);
+line:225           text-align:center;
+line:226           padding:5px;
+line:227           height:45px;
+line:228           position:absolute;
+line:229           right:0;
+line:230           top:750px;
+line:231           width:1190px;
+line:232       }
+line:233   
+line:234       table.imagetable {
+line:235           font-family: verdana,arial,sans-serif;
+line:236           font-size:11px;
+line:237           color:#333333;
+line:238           border-width: 1px;
+line:239           border-color: #999999;
+line:240           border-collapse: collapse;
+line:241           width:500px;
+line:242           height:120px;
+line:243       }
+line:244       table.imagetable th {
+line:245           background:#E0FFFF url(img/cell-blue.jpg);
+line:246           border-width: 1px;
+line:247           padding: 8px;
+line:248           border-style: solid;
+line:249           border-color: #999999;
+line:250       }
+line:251       table.imagetable td {
+line:252           background:#F0F8FF url(img/cell-grey.jpg);
+line:253           border-width: 1px;
+line:254           padding: 8px;
+line:255           border-style: solid;
+line:256           border-color: #999999;
+line:257       }
+line:258   
+line:259       canvas {
+line:260           background-color: #eee;
+line:261           display: block;
+line:262           margin: 0 auto;
+line:263           position:absolute;
+line:264           z-index:0;
+line:265           height:960px;
+line:266       }
+line:267   </style>
+line:268   
+line:269   <head>
+line:270       <script src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js">    //外链js
+line:271       </script>
+line:272       <script>
+line:273           $(document).ready(function(){
+line:274               $("button").click(function(){
+line:275                   $("form").toggle();
+line:276               });
+line:277           });
+line:278           function foo(){
+line:279               if(myform.name.value=="")
+line:280               {
+line:281                   alert("请输入你的姓名");   //js弹出对话框
+line:282                   myform.name.focus();
+line:283                   return false;
+line:284               }
+line:285               if (myform.content.value=="")
+line:286               {
+line:287                   alert("留言内容不能为空");
+line:288                   myform.content.focus();
+line:289                   return false;
+line:290               }
+line:291               if(myform.vcode.value==""){
+line:292                   alert('验证码不能为空');
+line:293                   myform.vcode.focus();
+line:294                   return false;
+line:295               }
+line:296           }
+line:297       </script>
+line:298   
+line:299   </head>
+line:300   <body>
+line:301   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+line:302   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+line:303   <canvas id="canvas"></canvas>
+line:304   <script>
+line:305       var canvas = document.getElementById("canvas");
+line:306       var ctx = canvas.getContext("2d");
+line:307       var cw = canvas.width = window.innerWidth,
+line:308           cx = cw / 2;
+line:309       var ch = canvas.height = window.innerHeight,
+line:310           cy = ch / 2;
+line:311   
+line:312       ctx.fillStyle = "#000";
+line:313       var linesNum = 16;
+line:314       var linesRy = [];
+line:315       var requestId = null;
+line:316   
+line:317       function Line(flag) {
+line:318           this.flag = flag;
+line:319           this.a = {};
+line:320           this.b = {};
+line:321           if (flag == "v") {
+line:322               this.a.y = 0;
+line:323               this.b.y = ch;
+line:324               this.a.x = randomIntFromInterval(0, ch);
+line:325               this.b.x = randomIntFromInterval(0, ch);
+line:326           } else if (flag == "h") {
+line:327               this.a.x = 0;
+line:328               this.b.x = cw;
+line:329               this.a.y = randomIntFromInterval(0, cw);
+line:330               this.b.y = randomIntFromInterval(0, cw);
+line:331           }
+line:332           this.va = randomIntFromInterval(25, 100) / 100;
+line:333           this.vb = randomIntFromInterval(25, 100) / 100;
+line:334   
+line:335           this.draw = function() {
+line:336               ctx.strokeStyle = "#ccc";
+line:337               ctx.beginPath();
+line:338               ctx.moveTo(this.a.x, this.a.y);
+line:339               ctx.lineTo(this.b.x, this.b.y);
+line:340               ctx.stroke();
+line:341           }
+line:342   
+line:343           this.update = function() {
+line:344               if (this.flag == "v") {
+line:345                   this.a.x += this.va;
+line:346                   this.b.x += this.vb;
+line:347               } else if (flag == "h") {
+line:348                   this.a.y += this.va;
+line:349                   this.b.y += this.vb;
+line:350               }
+line:351   
+line:352               this.edges();
+line:353           }
+line:354   
+line:355           this.edges = function() {
+line:356               if (this.flag == "v") {
+line:357                   if (this.a.x < 0 || this.a.x > cw) {
+line:358                       this.va *= -1;
+line:359                   }
+line:360                   if (this.b.x < 0 || this.b.x > cw) {
+line:361                       this.vb *= -1;
+line:362                   }
+line:363               } else if (flag == "h") {
+line:364                   if (this.a.y < 0 || this.a.y > ch) {
+line:365                       this.va *= -1;
+line:366                   }
+line:367                   if (this.b.y < 0 || this.b.y > ch) {
+line:368                       this.vb *= -1;
+line:369                   }
+line:370               }
+line:371           }
+line:372   
+line:373       }
+line:374   
+line:375       for (var i = 0; i < linesNum; i++) {
+line:376           var flag = i % 2 == 0 ? "h" : "v";
+line:377           var l = new Line(flag);
+line:378           linesRy.push(l);
+line:379       }
+line:380   
+line:381       function Draw() {
+line:382           requestId = window.requestAnimationFrame(Draw);
+line:383           ctx.clearRect(0, 0, cw, ch);
+line:384   
+line:385           for (var i = 0; i < linesRy.length; i++) {
+line:386               var l = linesRy[i];
+line:387               l.draw();
+line:388               l.update();
+line:389           }
+line:390           for (var i = 0; i < linesRy.length; i++) {
+line:391               var l = linesRy[i];
+line:392               for (var j = i + 1; j < linesRy.length; j++) {
+line:393                   var l1 = linesRy[j]
+line:394                   Intersect2lines(l, l1);
+line:395               }
+line:396           }
+line:397       }
+line:398   
+line:399       function Init() {
+line:400           linesRy.length = 0;
+line:401           for (var i = 0; i < linesNum; i++) {
+line:402               var flag = i % 2 == 0 ? "h" : "v";
+line:403               var l = new Line(flag);
+line:404               linesRy.push(l);
+line:405           }
+line:406   
+line:407           if (requestId) {
+line:408               window.cancelAnimationFrame(requestId);
+line:409               requestId = null;
+line:410           }
+line:411   
+line:412           cw = canvas.width = window.innerWidth,
+line:413               cx = cw / 2;
+line:414           ch = canvas.height = window.innerHeight,
+line:415               cy = ch / 2;
+line:416   
+line:417           Draw();
+line:418       };
+line:419   
+line:420       setTimeout(function() {
+line:421           Init();
+line:422   
+line:423           addEventListener('resize', Init, false);
+line:424       }, 15);
+line:425   
+line:426       function Intersect2lines(l1, l2) {
+line:427           var p1 = l1.a,
+line:428               p2 = l1.b,
+line:429               p3 = l2.a,
+line:430               p4 = l2.b;
+line:431           var denominator = (p4.y - p3.y) * (p2.x - p1.x) - (p4.x - p3.x) * (p2.y - p1.y);
+line:432           var ua = ((p4.x - p3.x) * (p1.y - p3.y) - (p4.y - p3.y) * (p1.x - p3.x)) / denominator;
+line:433           var ub = ((p2.x - p1.x) * (p1.y - p3.y) - (p2.y - p1.y) * (p1.x - p3.x)) / denominator;
+line:434           var x = p1.x + ua * (p2.x - p1.x);
+line:435           var y = p1.y + ua * (p2.y - p1.y);
+line:436           if (ua > 0 && ub > 0) {
+line:437               markPoint({
+line:438                   x: x,
+line:439                   y: y
+line:440               })
+line:441           }
+line:442       }
+line:443   
+line:444       function markPoint(p) {
+line:445           ctx.beginPath();
+line:446           ctx.arc(p.x, p.y, 2, 0, 2 * Math.PI);
+line:447           ctx.fill();
+line:448       }
+line:449   
+line:450       function randomIntFromInterval(mn, mx) {
+line:451           return ~~(Math.random() * (mx - mn + 1) + mn);
+line:452       }</script>
+line:453   <div class="main">
+line:454       <div class="header">
+line:455           <form class="y">
+line:456               <b>搜索留言：</b>
+line:457               <input type="text" name="搜索留言：">
+line:458               <form action="/demo/demo_form.asp">
+line:459                   <select name="ways">
+line:460                       <option value="用户名">用户名</option>
+line:461                       <option value="关键词">关键词</option>
+line:462                   </select>
+line:463                   <input type="submit" value="搜索" class="ss">
+line:464               </form>
+line:465           </form>
+line:466           <div class="image-one">
+line:467               <img src="http://p5.sinaimg.cn/2097558524/180/04041366623329"/ width="80px";height="80px">
+line:468           </div>
+line:469           <div class="l">
+line:470               <span style="font-size:80px ;font-family:华文琥珀">留言板</span>
+line:471           </div>
+line:472       </div>
+line:473   
+line:474       <div class="r">
+line:475           <div class="header1">
+line:476               <span ><b> <a href="" style="font-size:30px;color:#B0C4DE;text-decoration:none;">首页</a></span>
+line:477               <span style="font-size:30px;"|</b></span>
+line:478               <button class="tj1"><span style="font-size:28px ;color:#D8BFD8"><b>我要留言</button></b></span>
+line:479               <div>
+line:480                   <p1 style="font-size:28px ;color:#1E90F3">精弘网络开发部</p1>
+line:481               </div>
+line:482           </div>
+line:483           </br>
+line:484           <div>
+line:485               <div class="dl">
+line:486                   <form method="post"  action="post.php" style="display:none;" onsubmit="return foo();" name="myform" ">
+line:487                   <div>
+line:488                       <label for="name">&emsp;&emsp;&emsp;&emsp;<b>姓名</b></label>
+line:489                       <input name="name" type="text"><br/>
+line:490                       <label for="name">&emsp;&emsp;&emsp;&emsp;<b>邮箱</b></label>
+line:491                       <input name="email" type="email"><br/>
+line:492                       <label for="vcode">&emsp;&emsp;&emsp;<b>验证码</b></label>
+line:493                       <span><input type="text" name="vcode" id="yan"></span>
+line:494                       <span><img src="yzm.php" onClick="this.src='yzm.php?nocache='+Math.random()" style="cursor:hand" width="100px";height="15px" class="image-two"></span>
+line:495                       </br></br>
+line:496                       <span style="font-family:华文行楷;font-size:20px">&emsp;&emsp;请输入你的留言内容:</span>
+line:497                       </br></br>
+line:498                       <textarea class="k2"  value="请输入你的留言内容:" cols="30" rows="7" name="content"></textarea>
+line:499                       <button input type="submit" value="发送留言" class="tj">发送留言</button>
+line:500                   </div>
+line:501                   </form>
+line:502               </div>
+line:503           </div>
+line:504   
+line:505   
+line:506           <div class="z">
+line:507               <h1><b>留言内容</b></h1>
+line:508               <hr />
+line:509   
+line:510               <p>
+line:511                   <?php
+line:512                   if($result==null){
+line:513                       echo"暂时没有留言";
+line:514                   }  ?>
+line:515               </p>
+line:516                   <?php
+line:517               while($row=mysqli_fetch_array($result)){
+line:518               ?>
+line:519                   <table  class="imagetable" border="1" cellspacing="0">
+line:520                   <tr>
+line:521                       <td>姓名：<?php  echo $row['name']?></td>
+line:522                       <td style="text-align: center">留言时间:<?php echo $row['ressage_time']?></td>
+line:523                       <td><a href="delete.php?id=<?php echo $row['id']?>" >删除留言</a> </td>
+line:524                   </tr>
+line:525                   <tr>
+line:526                       <td colspan="3" rowspan="3">你的留言:<?php echo $row['content']?></td>
+line:527                   </tr>
+line:528               </table>
+line:529               <?php
+line:530               }?>
+line:531               <div id="baner" style="margin-top: 20px">
+line:532                   <a href="<?php
+line:533                   echo "$_SERVER[PHP_SELF]?page=1"
+line:534                   ?>">首页</a>
+line:535                   <a href="<?php
+line:536                   echo "$_SERVER[PHP_SELF]?page=".($page-1)
+line:537                   ?>">上一页</a>
+line:538                   <?php
+line:539                   for($i=1;$i<=$total_page;$i++){
+line:540                       if($i==$page){
+line:541                           echo "<a  style='padding: 5px 5px;background: #000;color: #FFF' href='$_SERVER[PHP_SELF]?page=$i'>$i</a>";
+line:542                       }else{
+line:543                           echo "<a  style='padding: 5px 5px' href='$_SERVER[PHP_SELF]?page=$i'>$i</a>";
+line:544                       }
+line:545                   }
+line:546                   ?>
+line:547                   <a href="<?php
+line:548                   echo "$_SERVER[PHP_SELF]?page=".($page+1)
+line:549                   ?>">下一页</a>
+line:550                   <a href="<?php
+line:551                   echo "$_SERVER[PHP_SELF]?page={$total_page}"
+line:552                   ?>">末页</a>
+line:553                   <span>共<?php echo $total?>条</span>
+line:554               </div>
+line:555           </div>
+line:556   
+line:557   
+line:558           <div class="footer">
+line:559               <span style="font-family:华文细黑;font-size:25px;"><b>Copyright &#174; 开花三人小分队</b></span>
+line:560           </div>
+line:561   
+line:562       </div>
+line:563   </body>
+line:564   <?php
+line:565   /*
+line:566    * Created by PhpStorm.
+line:567    * User: boom
+line:568    * Date: 2018/10/14
+line:569    * Time: 21:53
+line:570    */
+line:571   ?>
