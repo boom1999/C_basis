@@ -3,7 +3,7 @@
 #include"Player.h"
 using namespace std;
 
-#if 0
+#if 1
 int main ()
 {
     ofstream ofile ("put.txt", ios_base::out);
@@ -16,7 +16,7 @@ int main ()
 }
 #endif
 
-#if 1
+#if 0
 int main ()
 {
     ifstream ifile ("put.txt", ios_base::in);
